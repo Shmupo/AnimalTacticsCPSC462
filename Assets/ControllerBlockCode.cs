@@ -43,39 +43,16 @@ public class CodeBlock
 
 public class BlockCodeController : MonoBehaviour
 {
-    private bool isDragging = false;
-    private Vector3 dragStartPosition;
+    private Vector3 offset;
 
-    void OnMouseDown()
+    private void OnMouseDown()
     {
-        isDragging = true;
-        dragStartPosition = transform.position - GetMouseWorldPosition();
+        offset = transform.position - Camera.main.ScreenToWorldPoint(Input.mousePosition);
     }
 
-    void OnMouseUp()
+    private void OnMouseDrag()
     {
-        isDragging = false;
-    }
-
-    private Vector3 GetMouseWorldPosition()
-    {
-        Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        mouseWorldPosition.z = 0f;
-        return mouseWorldPosition;
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Called every frame
-    void Update()
-    {
-        if (isDragging)
-        {
-            transform.position = GetMouseWorldPosition() + dragStartPosition;
-        }
+        Vector3 newPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition) + offset;
+        transform.position = new Vector3(newPosition.x, newPosition.y, 0);
     }
 }
