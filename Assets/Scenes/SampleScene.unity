@@ -429,7 +429,7 @@ GameObject:
   - component: {fileID: 1059211528}
   - component: {fileID: 1059211529}
   m_Layer: 0
-  m_Name: MoveRightBlockGrabbable
+  m_Name: MoveRightBlock
   m_TagString: BlockCode
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -636,6 +636,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1610469744}
   - component: {fileID: 1610469745}
+  - component: {fileID: 1610469746}
   m_Layer: 0
   m_Name: MainStartBlock
   m_TagString: BlockCode
@@ -710,6 +711,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1610469746
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1610469743}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 445b7aa4e31d6094486a5dbcc0a28bf8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  childBlock: {fileID: 0}
 --- !u!1 &1656670100
 GameObject:
   m_ObjectHideFlags: 0
@@ -2047,7 +2061,7 @@ GameObject:
   - component: {fileID: 2057732341}
   - component: {fileID: 2057732342}
   m_Layer: 0
-  m_Name: AttackBlockDraggable
+  m_Name: AttackBlock
   m_TagString: BlockCode
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

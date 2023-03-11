@@ -37,26 +37,42 @@ public class DragBlockCode : MonoBehaviour
         {
             if (block == gameObject) { continue; }
 
-            float distanceX = Mathf.Abs(transform.position.x - block.transform.position.x);
-            float distanceY = Mathf.Abs(transform.position.y - block.transform.position.y + 1.0f);
-
-            if (distanceX < snapDistanceX && distanceY < snapDistanceY)
+            if (SnapToBottom(block))
             {
-                transform.position = block.transform.position + blockAttatchOffset;
-                if (block.name == "MainStartBlock")
-                {
-                    transform.position += new Vector3 (0f, 0.1f, 0f);
-                }
-                
                 AssignParent(block);
-                AssignChildtoParent(gameObject);
+                AssignChildtoParent(this.gameObject);
             }
             else
             {
                 UnassignParent();
             }
         }
+    }
 
+    // snap this block to the bottom of another
+    // return true if snapped
+    private bool SnapToBottom(GameObject block)
+    {
+        // check collision with another block
+
+        float distanceX = Mathf.Abs(transform.position.x - block.transform.position.x);
+        float distanceY = Mathf.Abs(transform.position.y - block.transform.position.y + 1.0f);
+
+        if (distanceX < snapDistanceX && distanceY < snapDistanceY)
+        {
+            transform.position = block.transform.position + blockAttatchOffset;
+            if (block.name == "MainStartBlock")
+            {
+                transform.position += new Vector3(0f, 0.1f, 0f);
+            }
+        }
+        return true;
+    }
+
+    // if spot below parent is taken, shift occupying block down and attach this one
+    private bool ClearBottomSlot(GameObject block)
+    {
+        return false;
     }
 
     private void AssignParent(GameObject block)

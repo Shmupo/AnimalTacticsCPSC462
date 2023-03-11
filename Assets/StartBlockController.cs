@@ -24,10 +24,11 @@ public class StartBlockController : MonoBehaviour
     }
 
     private List<Action<string, int>> actionStack = new List<Action<string, int>>();
-
+    private PlayerController playerScript = null;
     // this is assigned in the DragBlockController script
     public GameObject childBlock = null;
 
+    // The name of the block is used to identify it : "MoveRightBlock" will move the character right
     private void StoreInstructions()
     {
         if (childBlock != null) {
@@ -36,29 +37,34 @@ public class StartBlockController : MonoBehaviour
             {
                 DragBlockCode block = targetBlock.GetComponent<DragBlockCode>();
                 // store instruction here
-
+                actionStack.Add(new Action<string, int>(block.name, 1));
                 targetBlock = block.childBlock;
             }
         }
-
 
         actionStack = null;
     }
 
     public void OnMouseUp()
     {
-        
+        ExecuteBlockCode();
     }
 
+    // iterate through actionStack
+    // use DoAction in PlayerControllerScript
     private void ExecuteBlockCode()
     {
-
+        
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        playerScript = GameObject.Find("Elephant").GetComponent<PlayerController>();
+        if (playerScript == null ) 
+        {
+            Debug.LogError("No character found.");
+        }
     }
 
     // Update is called once per frame
