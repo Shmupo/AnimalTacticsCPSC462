@@ -43,6 +43,11 @@ public class DragBlockCode : MonoBehaviour
             if (distanceX < snapDistanceX && distanceY < snapDistanceY)
             {
                 transform.position = block.transform.position + blockAttatchOffset;
+                if (block.name == "MainStartBlock")
+                {
+                    transform.position += new Vector3 (0f, 0.1f, 0f);
+                }
+                
                 AssignParent(block);
                 AssignChildtoParent(gameObject);
             }
