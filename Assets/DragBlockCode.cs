@@ -11,9 +11,9 @@ public class DragBlockCode : MonoBehaviour
 {
     private bool isDragging;
     // for referencing block connected on top
-    public GameObject parentBlock = null;
+    public GameObject parentBlock;
     // for referencing block connectd on bottom
-    public GameObject childBlock = null;
+    public GameObject childBlock;
 
     private float snapDistanceX = 0.5f;
     private float snapDistanceY = 1f;
@@ -40,11 +40,11 @@ public class DragBlockCode : MonoBehaviour
             if (SnapToBottom(block))
             {
                 AssignParent(block);
-                AssignChildtoParent(this.gameObject);
+                break;
             }
-            else
+            else if (parentBlock != null)
             {
-                UnassignParent();
+                UnassignParent(block);
             }
         }
     }
@@ -54,7 +54,6 @@ public class DragBlockCode : MonoBehaviour
     private bool SnapToBottom(GameObject block)
     {
         // check collision with another block
-
         float distanceX = Mathf.Abs(transform.position.x - block.transform.position.x);
         float distanceY = Mathf.Abs(transform.position.y - block.transform.position.y + 1.0f);
 
@@ -65,43 +64,47 @@ public class DragBlockCode : MonoBehaviour
             {
                 transform.position += new Vector3(0f, 0.1f, 0f);
             }
-        }
-        return true;
-    }
-
-    // if spot below parent is taken, shift occupying block down and attach this one
-    private bool ClearBottomSlot(GameObject block)
-    {
-        return false;
-    }
-
-    private void AssignParent(GameObject block)
-    {
-        parentBlock = block;
-    }
-
-    public void AssignChildtoParent(GameObject parent)
-    {
-        if (parent != null)
-        {
-            parent.GetComponent<DragBlockCode>().childBlock = gameObject;
+            return true;
         }
         else
         {
-            Debug.LogError("Cannot assign child to null parent.");
+            return false;
         }
     }
 
-    private void UnassignParent()
+    // Links both child(this object) and parent
+    private void AssignParent(GameObject parent)
     {
-        if (parentBlock != null)
+        if (parent == null) {
+            Debug.LogError("Parent is null");
+            return;
+        }
+        parentBlock = parent;
+        var dragBlockCode = parentBlock.GetComponent<DragBlockCode>();
+        if (dragBlockCode != null)
         {
-            DragBlockCode parentDragBlock = parentBlock.GetComponent<DragBlockCode>();
-            if (parentDragBlock != null)
-            {
-                parentDragBlock.childBlock = null;
-            }
-            parentBlock = null;
+            dragBlockCode.childBlock = gameObject;
+            return;
+        }
+
+        var startBlockController = parentBlock.GetComponent<StartBlockController>();
+        if (startBlockController != null)
+        {
+            startBlockController.childBlock = gameObject;
+            return;
+        }
+
+        Debug.LogError("No child component found in parent.");
+    }
+
+    // remove parent/child links
+    private void UnassignParent(GameObject parent)
+    {
+        if (parent != null)
+        {
+            parent.GetComponent<DragBlockCode>().childBlock = null;
+            parent.GetComponent<StartBlockController>().childBlock = null;
+            parent = null;
         }
         else
         {
