@@ -2,10 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// ##### INFO #####
+// Script for code blocks.
+// Add this as a component of the sprite.
 // Sprites need to be tagged as "BlockCode" in order for this code to snap onto other blocks
 // Sprite must have a Box Collider 2D in order to be dragged
+// blockAction is to be defined in the editor, check playercontroller for valid names
+
 // TODO : Show preview of where this piece will end up if it can snap to another block.
-// TODO : Do not let multiple pieces take up the same spot
 
 public class DragBlockCode : MonoBehaviour
 {
@@ -14,6 +18,8 @@ public class DragBlockCode : MonoBehaviour
     public GameObject parentBlock;
     // for referencing block connectd on bottom
     public GameObject childBlock;
+    // what the block will do
+    public string blockAction;
 
     private float snapDistanceX = 0.5f;
     private float snapDistanceY = 1f;
@@ -25,6 +31,12 @@ public class DragBlockCode : MonoBehaviour
     public void OnMouseDown()
     {
         isDragging = true;
+        
+        if (parentBlock != null) 
+        {
+            Debug.Log(parentBlock);
+            UnassignParent(parentBlock);
+        }
     }
 
     public void OnMouseUp()
@@ -42,10 +54,18 @@ public class DragBlockCode : MonoBehaviour
                 AssignParent(block);
                 break;
             }
-            else if (parentBlock != null)
-            {
-                UnassignParent(block);
-            }
+        }
+    }
+
+    // also drags child blocks
+    public void Drag()
+    {
+        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+        transform.Translate(mousePos);
+
+        if(childBlock != null)
+        {
+            childBlock.transform.Translate(mousePos);
         }
     }
 
@@ -63,6 +83,11 @@ public class DragBlockCode : MonoBehaviour
             if (block.name == "MainStartBlock")
             {
                 transform.position += new Vector3(0f, 0.1f, 0f);
+
+                if (childBlock != null)
+                {
+                    childBlock.transform.position = transform.position - new Vector3(0f, 1.25f, .0f);
+                }
             }
             return true;
         }
@@ -97,14 +122,21 @@ public class DragBlockCode : MonoBehaviour
         Debug.LogError("No child component found in parent.");
     }
 
-    // remove parent/child links
+    // remove parent/child links relating to the parent
     private void UnassignParent(GameObject parent)
     {
         if (parent != null)
         {
-            parent.GetComponent<DragBlockCode>().childBlock = null;
-            parent.GetComponent<StartBlockController>().childBlock = null;
-            parent = null;
+            var childComponent = parent.GetComponent<DragBlockCode>();
+            if (childComponent != null)
+            {
+                childComponent.childBlock = null;
+            }
+            else
+            {
+                parent.GetComponent<StartBlockController>().childBlock = null;
+            }
+            parentBlock = null;
         }
         else
         {
@@ -117,8 +149,7 @@ public class DragBlockCode : MonoBehaviour
     {
         if (isDragging)
         {
-            Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
-            transform.Translate(mousePos);
+            Drag();
         }
     }
 }

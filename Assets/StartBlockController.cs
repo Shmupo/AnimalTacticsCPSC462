@@ -2,6 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// ##### INFO #####
+// This block will control the character when pressed
+// It will link to the object titled "Character" by itself on start.
+// "Character" must be the name of a sibling object
+
 public class StartBlockController : MonoBehaviour
 {
     // name is the name of the action, value is how much movement or attack
@@ -40,7 +45,7 @@ public class StartBlockController : MonoBehaviour
             {
                 var block = targetBlock.GetComponent<DragBlockCode>();
                 // store instruction here
-                actionStack.Add(new Action<string, int>(block.name, 1));
+                actionStack.Add(new Action<string, int>(block.blockAction, 1));
                 targetBlock = block.childBlock;
             }
         }

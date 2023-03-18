@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// ##### INFO #####
+// Defines and implements actions for the character
+// Actions are called from the start block controller
+
 // Directions are as follows : "UP" "DOWN" "LEFT" "RIGHT"
 public class PlayerController : MonoBehaviour
 {
@@ -14,19 +18,19 @@ public class PlayerController : MonoBehaviour
     {
         Vector3 moveVector;
 
-        if (direction == "MoveUpBlock")
+        if (direction == "Up")
         {
             moveVector = new Vector3(0, 1, 0);
         }
-        else if (direction == "MoveDownBlock")
+        else if (direction == "Down")
         {
             moveVector = new Vector3(0, -1, 0);
         }
-        else if (direction == "MoveLeftBlock")
+        else if (direction == "Left")
         {
             moveVector = new Vector3(-1, 0, 0);
         }
-        else if (direction == "MoveRightBlock")
+        else if (direction == "Right")
         {
             moveVector = new Vector3(1, 0, 0);
         }
@@ -38,23 +42,23 @@ public class PlayerController : MonoBehaviour
     // called in other scripts to make the character do something
     public void DoAction(string name, int value)
     {
-        if (name == "MoveUpBlock")
+        if (name == "Up")
         {
             changeMovePoint(name);
         }
-        else if (name == "MoveDownBlock") 
+        else if (name == "Down") 
         {
             changeMovePoint(name);
         }
-        else if (name == "MoveLeftBlock") 
+        else if (name == "Left") 
         {
             changeMovePoint(name);
         }
-        else if (name == "MoveRightBlock") 
+        else if (name == "Right") 
         {
             changeMovePoint(name);
         }
-        else if (name == "AttackBlock") 
+        else if (name == "Attack") 
         {
 
         }
