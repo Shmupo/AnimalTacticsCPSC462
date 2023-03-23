@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Threading.Tasks;
 
 // ##### INFO #####
 // Defines and implements actions for the character
@@ -39,49 +40,58 @@ public class PlayerController : MonoBehaviour
         movePoint.position += moveVector;
     }
 
-    // called in other scripts to make the character do something
-    public void DoAction(string name, int value)
+    public void DoAction(string name)
     {
         if (name == "Up")
         {
             changeMovePoint(name);
         }
-        else if (name == "Down") 
+        else if (name == "Down")
         {
             changeMovePoint(name);
         }
-        else if (name == "Left") 
+        else if (name == "Left")
         {
             changeMovePoint(name);
         }
-        else if (name == "Right") 
+        else if (name == "Right")
         {
             changeMovePoint(name);
         }
-        else if (name == "Attack") 
+        else if (name == "Attack")
         {
 
         }
     }
 
+    public IEnumerator ActivatePlayer(List<string> actionStack)
+    {
+        foreach (string action in actionStack)
+        {
+            DoAction(action);
+
+            while (transform.position != movePoint.position)
+            {
+                MoveToPoint();
+                StartCoroutine(MoveToPoint());
+                yield return new WaitUntil(() => transform.position == movePoint.position); // wait for the next frame
+            }
+        }
+    }
+
     // move the character to the move point
     // needs to be called through Update()
-    private void MoveToPoint()
+    private IEnumerator MoveToPoint()
     {
-        if (transform.position != movePoint.position)
+        while (transform.position != movePoint.position)
         {
             transform.position = Vector3.MoveTowards(transform.position, movePoint.position, Time.deltaTime * moveSpeed);
+            yield return null;
         }
     }
 
     // Start is called before the first frame update
     void Start()
     {
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        MoveToPoint();
     }
 }
