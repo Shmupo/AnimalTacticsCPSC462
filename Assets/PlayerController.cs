@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Threading.Tasks;
+using UnityEngine.Tilemaps;
 
 // ##### INFO #####
 // Defines and implements actions for the character
@@ -13,6 +14,10 @@ public class PlayerController : MonoBehaviour
     // These are assigned within the unity editor inspector window
     public float moveSpeed;
     public Transform movePoint;
+    // must be "land" or "air" or "water
+    public string movementType;
+
+    public Tilemap tilemap;
 
     // move the movePoint in a given direction by 1 tile
     private void changeMovePoint(string direction)
@@ -45,18 +50,34 @@ public class PlayerController : MonoBehaviour
         if (name == "Up")
         {
             changeMovePoint(name);
+            if (!checkMoveTile())
+            {
+                changeMovePoint("Down");
+            }
         }
         else if (name == "Down")
         {
             changeMovePoint(name);
+            if (!checkMoveTile())
+            {
+                changeMovePoint("Up");
+            }
         }
         else if (name == "Left")
         {
             changeMovePoint(name);
+            if (!checkMoveTile())
+            {
+                changeMovePoint("Right");
+            }
         }
         else if (name == "Right")
         {
             changeMovePoint(name);
+            if (!checkMoveTile())
+            {
+                changeMovePoint("Left");
+            }
         }
         else if (name == "Attack")
         {
@@ -64,6 +85,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // moves player again after previous move is done
     public IEnumerator ActivatePlayer(List<string> actionStack)
     {
         foreach (string action in actionStack)
@@ -76,6 +98,29 @@ public class PlayerController : MonoBehaviour
                 StartCoroutine(MoveToPoint());
                 yield return new WaitUntil(() => transform.position == movePoint.position); // wait for the next frame
             }
+        }
+    }
+
+    // check if tile to move to is passable, false if not
+    private bool checkMoveTile()
+    {
+        Vector3Int movePointTile = tilemap.WorldToCell(movePoint.position);
+        TileBase tile = tilemap.GetTile(movePointTile);
+
+        if (tile is CustomTile customTile)
+        {
+            if (customTile.tileType != movementType)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        else
+        {
+            return false;
         }
     }
 
