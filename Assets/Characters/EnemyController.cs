@@ -7,6 +7,8 @@ public class EnemyController : MonoBehaviour
     public GameObject character; // The player character
     public float moveSpeed = 1.0f; // The speed at which the enemy moves
     public float attackRange = 2.0f; // The distance at which the enemy attacks
+    public int health = 1; // The health of the enemy
+    public int attackDamage = 3; // The amount of damage the enemy deals
 
     private bool hasMovedThisTurn = false; // To keep track of whether the enemy has moved already this turn
 
@@ -19,26 +21,30 @@ public class EnemyController : MonoBehaviour
             if (distanceToCharacter <= attackRange)
             {
                 // Attack the player character
-                Debug.Log("Attacking player character!");
+                character.GetComponent<PlayerController>().TakeDamage(attackDamage);
+                Debug.Log("Enemy attacked player character!");
+
+                // End the enemy's turn after attacking
+                EndTurn();
+            }
+            else if (distanceToCharacter <= 5)
+            {
+                // Move towards the player character if they are within 5 blocks
+                transform.position += (character.transform.position - transform.position).normalized * moveSpeed * Time.deltaTime;
+                Debug.Log("Enemy moving towards player character!");
             }
             else
             {
-                // Move towards the player character if they are within 5 blocks
-                if (distanceToCharacter <= 5)
+                // Move right 5 blocks in the first turn, and left 5 blocks in the next turn
+                if (hasMovedThisTurn)
                 {
-                    transform.position += (character.transform.position - transform.position).normalized * moveSpeed * Time.deltaTime;
+                    transform.position += Vector3.left * 5;
+                    Debug.Log("Enemy moving left!");
                 }
                 else
                 {
-                    // Move right 5 blocks in the first turn, and left 5 blocks in the next turn
-                    if (hasMovedThisTurn)
-                    {
-                        transform.position += Vector3.left * 5;
-                    }
-                    else
-                    {
-                        transform.position += Vector3.right * 5;
-                    }
+                    transform.position += Vector3.right * 5;
+                    Debug.Log("Enemy moving right!");
                 }
             }
 
@@ -51,5 +57,29 @@ public class EnemyController : MonoBehaviour
     {
         // Reset the hasMovedThisTurn flag at the end of each turn
         hasMovedThisTurn = false;
+
+        // Output a message indicating the end of the enemy's turn
+        Debug.Log("Enemy turn ended.");
+    }
+
+    public void DeleteEnemy()
+    {
+        // Output a message indicating that the enemy is dead
+        Debug.Log("Enemy dead.");
+        Destroy(gameObject);
+    }
+
+    public void TakeDamage(int damage)
+    {
+        health -= damage;
+        if (health <= 0)
+        {
+            DeleteEnemy();
+        }
+        else
+        {
+            // Output a message indicating that the enemy has been damaged
+            Debug.Log("Enemy has been damaged.");
+        }
     }
 }
