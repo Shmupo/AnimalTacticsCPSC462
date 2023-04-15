@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
-    public GameObject character; // The player character
     public float moveSpeed = 1.0f; // The speed at which the enemy moves
     public float attackRange = 2.0f; // The distance at which the enemy attacks
     public int health = 1; // The health of the enemy
     public int attackDamage = 3; // The amount of damage the enemy deals
+    private PlayerController playerScript = null;
+    public GameObject playerCharacter;
 
     private bool hasMovedThisTurn = false; // To keep track of whether the enemy has moved already this turn
 
@@ -17,12 +18,15 @@ public class EnemyController : MonoBehaviour
         if (!hasMovedThisTurn)
         {
             // Check if the player character is within attack range
-            float distanceToCharacter = Vector3.Distance(transform.position, character.transform.position);
+            float distanceToCharacter = Vector3.Distance(transform.position, playerCharacter.transform.position);
             if (distanceToCharacter <= attackRange)
             {
                 // Attack the player character
-                character.GetComponent<PlayerController>().TakeDamage(attackDamage);
-                Debug.Log("Enemy attacked player character!");
+                if (playerScript != null)
+                {
+                    playerScript.TakeDamage(attackDamage);
+                    Debug.Log("Enemy attacked player character!");
+                }
 
                 // End the enemy's turn after attacking
                 EndTurn();
@@ -30,7 +34,7 @@ public class EnemyController : MonoBehaviour
             else if (distanceToCharacter <= 5)
             {
                 // Move towards the player character if they are within 5 blocks
-                transform.position += (character.transform.position - transform.position).normalized * moveSpeed * Time.deltaTime;
+                transform.position += (transform.position - playerCharacter.transform.position).normalized * moveSpeed * Time.deltaTime;
                 Debug.Log("Enemy moving towards player character!");
             }
             else
@@ -51,6 +55,17 @@ public class EnemyController : MonoBehaviour
             // Mark this turn as having been moved
             hasMovedThisTurn = true;
         }
+    }
+
+    private void start()
+    {
+        playerScript = playerCharacter.transform.Find("Character").gameObject.GetComponent<PlayerController>();
+
+        if (playerScript == null)
+        {
+            Debug.LogError("No character found.");
+        }
+
     }
 
     public void EndTurn()

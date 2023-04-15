@@ -20,6 +20,7 @@ public class PlayerController : MonoBehaviour
     public int health;
 
     public Tilemap tilemap;
+    private GameObject[] enemies;
 
     // move the movePoint in a given direction by 1 tile
     private void ChangeMovePoint(string direction)
@@ -51,34 +52,30 @@ public class PlayerController : MonoBehaviour
     {
         if (name == "Up")
         {
-            ChangeMovePoint(name);
-            if (!CheckMoveTile())
+            if (CheckMoveTile())
             {
-                ChangeMovePoint("Down");
+                ChangeMovePoint(name);
             }
         }
         else if (name == "Down")
         {
-            ChangeMovePoint(name);
-            if (!CheckMoveTile())
+            if (CheckMoveTile())
             {
-                ChangeMovePoint("Up");
+                ChangeMovePoint(name);
             }
         }
         else if (name == "Left")
         {
-            ChangeMovePoint(name);
-            if (!CheckMoveTile())
+            if (CheckMoveTile())
             {
-                ChangeMovePoint("Right");
+                ChangeMovePoint(name);
             }
         }
         else if (name == "Right")
         {
-            ChangeMovePoint(name);
-            if (!CheckMoveTile())
+            if (CheckMoveTile())
             {
-                ChangeMovePoint("Left");
+                ChangeMovePoint(name);
             }
         }
         else if (name == "Attack")
@@ -117,12 +114,11 @@ public class PlayerController : MonoBehaviour
     // return a list of enemies 1-grid square away
     private List<GameObject> GetCloseEnemies()
     {
-        GameObject[] enemyList = GameObject.FindGameObjectsWithTag("Enemy");
         List<GameObject> closeEnemies = new List<GameObject>();
 
-        foreach (GameObject enemy in enemyList)
+        foreach (var enemy in enemies)
         {
-            if (Vector3.Distance(transform.position, enemy.transform.position) <= 1)
+            if (Vector3.Distance(transform.position, enemy.transform.position) <= 1.2)
             {
                 closeEnemies.Add(enemy);
             }
@@ -171,8 +167,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // Start is called before the first frame update
+    // Initializing the enemies list
     void Start()
     {
+        enemies = GameObject.FindGameObjectsWithTag("Enemy");
     }
 }

@@ -36,8 +36,6 @@ public class StartBlockController : MonoBehaviour
     {
         ReadInstructions();
         ExecuteBlockCode();
-        // debugging
-        Debug.Log(actionStack);
     }
 
     // iterate through actionStack
