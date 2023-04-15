@@ -8,7 +8,7 @@ using UnityEngine.Tilemaps;
 // Defines and implements actions for the character
 // Actions are called from the start block controller
 
-// Directions are as follows : "UP" "DOWN" "LEFT" "RIGHT"
+// Directions are as follows : "Up" "Down" "Left" "Right"
 public class PlayerController : MonoBehaviour
 {
     // These are assigned within the unity editor inspector window
@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
     public Transform movePoint;
     // must be "land" or "air" or "water
     public string movementType;
+    public int attack;
 
     public Tilemap tilemap;
 
@@ -81,7 +82,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (name == "Attack")
         {
-
+            attackAll();
         }
     }
 
@@ -99,6 +100,34 @@ public class PlayerController : MonoBehaviour
                 yield return new WaitUntil(() => transform.position == movePoint.position); // wait for the next frame
             }
         }
+    }
+
+    // all enemies 1-grid square within this character takes damage
+    private void attackAll()
+    {
+        List<Gameobject> nearbyEnemies = getCloseEnemies();
+        
+        foreach (var enemy in nearbyEnemies)
+        {
+            enemy.GetComponent<EnemyController>().takeDamage(attack);
+        }
+    }
+
+    // return a list of enemies 1-grid square away
+    private List<GameObject> getCloseEnemies()
+    {
+        GameObject[] enemyList = GameObject.FindGameObjectsWithTag("Enemy");
+        List<GameObject> closeEnemies = new List<GameObject>();
+
+        foreach (GameObject enemy in enemyList)
+        {
+            if (Vector3.Distance(transform.position, enemy.transform.position) <= 1)
+            {
+                closeEnemies.Add(enemy);
+            }
+        }
+
+        return closeEnemies;
     }
 
     // check if tile to move to is passable, false if not
