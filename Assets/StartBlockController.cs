@@ -9,26 +9,7 @@ using UnityEngine;
 
 public class StartBlockController : MonoBehaviour
 {
-    // name is the name of the action, value is how much movement or attack
-    // default for value is 1
-    private class Action<T1, T2>
-    {
-        public string name;
-        public int value = 1;
-
-        public Action(string name, int value)
-        {
-            this.name = name;
-            this.value = value;
-        }
-
-        public Action(string name)
-        {
-            this.name = name;
-        }
-    }
-
-    private List<Action<string, int>> actionStack = new List<Action<string, int>>();
+    private List<string> actionStack = new List<string>();
     // this is assigned in the DragBlockController script
     public GameObject childBlock = null;
     public GameObject playerCharacter;
@@ -45,7 +26,7 @@ public class StartBlockController : MonoBehaviour
             {
                 var block = targetBlock.GetComponent<DragBlockCode>();
                 // store instruction here
-                actionStack.Add(new Action<string, int>(block.blockAction, 1));
+                actionStack.Add(block.blockAction);
                 targetBlock = block.childBlock;
             }
         }
@@ -55,8 +36,6 @@ public class StartBlockController : MonoBehaviour
     {
         ReadInstructions();
         ExecuteBlockCode();
-        // debugging
-        Debug.Log(actionStack);
     }
 
     // iterate through actionStack
@@ -65,10 +44,7 @@ public class StartBlockController : MonoBehaviour
     {
         if (actionStack != null)
         {
-            foreach (Action<string, int> charAction in actionStack)
-            {
-                playerScript.DoAction(charAction.name, charAction.value);
-            }
+            StartCoroutine(playerScript.ActivatePlayer(actionStack));
         }
     }
 
