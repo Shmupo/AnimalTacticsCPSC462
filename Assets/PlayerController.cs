@@ -17,11 +17,12 @@ public class PlayerController : MonoBehaviour
     // must be "land" or "air" or "water
     public string movementType;
     public int attack;
+    public int health;
 
     public Tilemap tilemap;
 
     // move the movePoint in a given direction by 1 tile
-    private void changeMovePoint(string direction)
+    private void ChangeMovePoint(string direction)
     {
         Vector3 moveVector;
 
@@ -50,39 +51,39 @@ public class PlayerController : MonoBehaviour
     {
         if (name == "Up")
         {
-            changeMovePoint(name);
-            if (!checkMoveTile())
+            ChangeMovePoint(name);
+            if (!CheckMoveTile())
             {
-                changeMovePoint("Down");
+                ChangeMovePoint("Down");
             }
         }
         else if (name == "Down")
         {
-            changeMovePoint(name);
-            if (!checkMoveTile())
+            ChangeMovePoint(name);
+            if (!CheckMoveTile())
             {
-                changeMovePoint("Up");
+                ChangeMovePoint("Up");
             }
         }
         else if (name == "Left")
         {
-            changeMovePoint(name);
-            if (!checkMoveTile())
+            ChangeMovePoint(name);
+            if (!CheckMoveTile())
             {
-                changeMovePoint("Right");
+                ChangeMovePoint("Right");
             }
         }
         else if (name == "Right")
         {
-            changeMovePoint(name);
-            if (!checkMoveTile())
+            ChangeMovePoint(name);
+            if (!CheckMoveTile())
             {
-                changeMovePoint("Left");
+                ChangeMovePoint("Left");
             }
         }
         else if (name == "Attack")
         {
-            attackAll();
+            AttackAll();
         }
     }
 
@@ -103,18 +104,18 @@ public class PlayerController : MonoBehaviour
     }
 
     // all enemies 1-grid square within this character takes damage
-    private void attackAll()
+    private void AttackAll()
     {
-        List<Gameobject> nearbyEnemies = getCloseEnemies();
+        List<GameObject> nearbyEnemies = GetCloseEnemies();
         
         foreach (var enemy in nearbyEnemies)
         {
-            enemy.GetComponent<EnemyController>().takeDamage(attack);
+            enemy.GetComponent<EnemyController>().TakeDamage(attack);
         }
     }
 
     // return a list of enemies 1-grid square away
-    private List<GameObject> getCloseEnemies()
+    private List<GameObject> GetCloseEnemies()
     {
         GameObject[] enemyList = GameObject.FindGameObjectsWithTag("Enemy");
         List<GameObject> closeEnemies = new List<GameObject>();
@@ -130,8 +131,14 @@ public class PlayerController : MonoBehaviour
         return closeEnemies;
     }
 
+    // called by other entities to make this one take damage
+    public void TakeDamage(int damage)
+    {
+        health -= damage;
+    }
+
     // check if tile to move to is passable, false if not
-    private bool checkMoveTile()
+    private bool CheckMoveTile()
     {
         Vector3Int movePointTile = tilemap.WorldToCell(movePoint.position);
         TileBase tile = tilemap.GetTile(movePointTile);
