@@ -65,6 +65,7 @@ public class EnemyController : MonoBehaviour
         {
             Debug.LogError("No character found.");
         }
+
     }
 
     public void EndTurn()
