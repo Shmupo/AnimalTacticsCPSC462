@@ -6,6 +6,33 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/MM.unity
+    guid: 1d1b4d8f3c88fcb4881984165fc38511
+  - enabled: 1
+    path: Assets/Scenes/Tutorial.unity
+    guid: c9f45872bd714534b85d73284a8227bc
+  - enabled: 1
+    path: Assets/Scenes/Level1Scene.unity
+    guid: 99ab14565ad893f46a6cb97b8bc3d972
+  - enabled: 1
+    path: Assets/Scenes/lvl2Scene.unity
+    guid: a3c2938f79314464e8633b6f6efafaed
+  - enabled: 1
+    path: Assets/Scenes/lvl3scene.unity
+    guid: 72c863c3073de784caff587c07dd8787
+  - enabled: 1
+    path: Assets/Scenes/lvl4Scene.unity
+    guid: 8226681e2773c214c8bb1b5aa73276ae
+  - enabled: 1
     path: Assets/Scenes/LakeLevel.unity
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Scenes/SeaLevel.unity
+    guid: 04f18fc9e35046548b53eb2e60e12b8e
+  - enabled: 1
+    path: Assets/Scenes/TreesAndSea.unity
+    guid: fc371149a793bfc4aaf94af25f2cf10b
+  - enabled: 1
+    path: Assets/Scenes/ForestLevel.unity
+    guid: e2ae6dbe5010a914d8a04e79d93ba7b5
   m_configObjects: {}
