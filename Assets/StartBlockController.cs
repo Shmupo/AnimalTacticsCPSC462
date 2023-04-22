@@ -36,6 +36,8 @@ public class StartBlockController : MonoBehaviour
     {
         ReadInstructions();
         ExecuteBlockCode();
+        // Enemy start function
+
     }
 
     // iterate through actionStack
