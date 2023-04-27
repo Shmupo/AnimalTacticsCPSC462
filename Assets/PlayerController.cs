@@ -19,8 +19,17 @@ public class PlayerController : MonoBehaviour
     public int attack;
     public int health;
 
+    public MainHUDScript HUD;
+
     public Tilemap tilemap;
     private GameObject[] enemies;
+
+    // displaying enemy info if this enemy is clicked
+    // click again to hide info
+    void OnMouseDown() 
+    {
+        HUD.TogglePlayer(gameObject);
+    }
 
     // move the movePoint in a given direction by 1 tile
     private void ChangeMovePoint(string direction)

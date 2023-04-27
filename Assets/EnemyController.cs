@@ -7,9 +7,11 @@ public class EnemyController : MonoBehaviour
     public float moveSpeed = 1.0f; // The speed at which the enemy moves
     public float attackRange = 2.0f; // The distance at which the enemy attacks
     public int health = 1; // The health of the enemy
-    public int attackDamage = 3; // The amount of damage the enemy deals
+    public int attack = 3; // The amount of damage the enemy deals
     private PlayerController playerScript = null;
     public GameObject playerCharacter;
+
+    public MainHUDScript HUD;
 
     private bool hasMovedThisTurn = false; // To keep track of whether the enemy has moved already this turn
 
@@ -24,7 +26,7 @@ public class EnemyController : MonoBehaviour
                 // Attack the player character
                 if (playerScript != null)
                 {
-                    playerScript.TakeDamage(attackDamage);
+                    playerScript.TakeDamage(attack);
                     Debug.Log("Enemy attacked player character!");
                 }
 
@@ -55,6 +57,13 @@ public class EnemyController : MonoBehaviour
             // Mark this turn as having been moved
             hasMovedThisTurn = true;
         }
+    }
+
+    // displaying enemy info if this enemy is clicked
+    // click again to hide info
+    void OnMouseDown() 
+    {
+        HUD.ToggleEnemy(gameObject);
     }
 
     private void start()
