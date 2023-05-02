@@ -1,72 +1,98 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Threading.Tasks;
+using UnityEngine.Tilemaps;
 
-// Directions are as follows : "UP" "DOWN" "LEFT" "RIGHT"
+// ##### INFO #####
+// Defines and implements actions for the character
+// Actions are called from the start block controller
+
+// Directions are as follows : "Up" "Down" "Left" "Right"
 public class PlayerController : MonoBehaviour
 {
-    public float moveSpeed = 5f;
+    // These are assigned within the unity editor inspector window
+    public float moveSpeed;
     public Transform movePoint;
-<<<<<<< Updated upstream
-=======
     // must be "land" or "air" or "water
     public string movementType;
     public int attack;
     public int health;
-    public static bool isPlayerTurn = true;
+
+    public MainHUDScript HUD;
+
     public Tilemap tilemap;
     private GameObject[] enemies;
->>>>>>> Stashed changes
+
+    // displaying enemy info if this enemy is clicked
+    // click again to hide info
+    void OnMouseDown() 
+    {
+        HUD.TogglePlayer(gameObject);
+    }
 
     // move the movePoint in a given direction by 1 tile
-    public void changeMovePoint(string direction)
+    private void ChangeMovePoint(string direction)
     {
         Vector3 moveVector;
 
-        if (direction == "MoveUpBlock")
+        if (direction == "Up")
         {
             moveVector = new Vector3(0, 1, 0);
         }
-        else if (direction == "MoveDownBlock")
+        else if (direction == "Down")
         {
             moveVector = new Vector3(0, -1, 0);
         }
-        else if (direction == "MoveLeftBlock")
-        {
-            moveVector = new Vector3(1, 0, 0);
-        }
-        else if (direction == "MoveRightBlock")
+        else if (direction == "Left")
         {
             moveVector = new Vector3(-1, 0, 0);
+        }
+        else if (direction == "Right")
+        {
+            moveVector = new Vector3(1, 0, 0);
         }
         else { moveVector = Vector3.zero;  }
 
         movePoint.position += moveVector;
     }
 
-    public void DoAction(string name, int value)
+    public void DoAction(string name)
     {
-        if (name == "MoveUpBlock")
+        if (name == "Up")
         {
-            
+            if (CheckMoveTile())
+            {
+                ChangeMovePoint(name);
+            }
         }
-        else if (name == "MoveDownBlock")
+        else if (name == "Down")
         {
-            
+            if (CheckMoveTile())
+            {
+                ChangeMovePoint(name);
+            }
         }
-        else if (name == "MoveLeftBlock")
+        else if (name == "Left")
         {
-            
+            if (CheckMoveTile())
+            {
+                ChangeMovePoint(name);
+            }
         }
-        else if (name == "MoveRightBlock")
+        else if (name == "Right")
         {
-            
+            if (CheckMoveTile())
+            {
+                ChangeMovePoint(name);
+            }
         }
-        else if (name == "AttackBlock")
+        else if (name == "Attack")
         {
+            AttackAll();
+        }
+    }
 
-<<<<<<< Updated upstream
-=======
     // moves player again after previous move is done
     public IEnumerator ActivatePlayer(List<string> actionStack)
     {
@@ -81,9 +107,7 @@ public class PlayerController : MonoBehaviour
                 yield return new WaitUntil(() => transform.position == movePoint.position); // wait for the next frame
             }
         }
-        PlayerController.isPlayerTurn = false; // End player's turn
     }
-
 
     // all enemies 1-grid square within this character takes damage
     private void AttackAll()
@@ -138,25 +162,23 @@ public class PlayerController : MonoBehaviour
         else
         {
             return false;
->>>>>>> Stashed changes
         }
     }
 
     // move the character to the move point
-    public void MoveToPoint()
+    // needs to be called through Update()
+    private IEnumerator MoveToPoint()
     {
-
+        while (transform.position != movePoint.position)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, movePoint.position, Time.deltaTime * moveSpeed);
+            yield return null;
+        }
     }
 
-    // Start is called before the first frame update
+    // Initializing the enemies list
     void Start()
     {
-        changeMovePoint("UP");
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        enemies = GameObject.FindGameObjectsWithTag("Enemy");
     }
 }
