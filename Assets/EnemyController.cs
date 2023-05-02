@@ -11,60 +11,66 @@ public class EnemyController : MonoBehaviour
     private PlayerController playerScript = null;
     public GameObject playerCharacter;
 
-    public MainHUDScript HUD;
-
     private bool hasMovedThisTurn = false; // To keep track of whether the enemy has moved already this turn
 
     void Update()
     {
         if (!hasMovedThisTurn)
         {
-            // Check if the player character is within attack range
-            float distanceToCharacter = Vector3.Distance(transform.position, playerCharacter.transform.position);
-            if (distanceToCharacter <= attackRange)
-            {
-                // Attack the player character
-                if (playerScript != null)
-                {
-                    playerScript.TakeDamage(attack);
-                    Debug.Log("Enemy attacked player character!");
-                }
-
-                // End the enemy's turn after attacking
-                EndTurn();
-            }
-            else if (distanceToCharacter <= 5)
-            {
-                // Move towards the player character if they are within 5 blocks
-                transform.position += (transform.position - playerCharacter.transform.position).normalized * moveSpeed * Time.deltaTime;
-                Debug.Log("Enemy moving towards player character!");
-            }
-            else
-            {
-                // Move right 5 blocks in the first turn, and left 5 blocks in the next turn
-                if (hasMovedThisTurn)
-                {
-                    transform.position += Vector3.left * 5;
-                    Debug.Log("Enemy moving left!");
-                }
-                else
-                {
-                    transform.position += Vector3.right * 5;
-                    Debug.Log("Enemy moving right!");
-                }
-            }
-
-            // Mark this turn as having been moved
-            hasMovedThisTurn = true;
+            PerformAction();
         }
     }
 
+    private void PerformAction()
+    {
+        // Check if the player character is within attack range
+        float distanceToCharacter = Vector3.Distance(transform.position, playerCharacter.transform.position);
+        if (distanceToCharacter <= attackRange)
+        {
+            // Attack the player character
+            if (playerScript != null)
+            {
+                playerScript.TakeDamage(attack);
+                Debug.Log("Enemy attacked player character!");
+            }
+
+            // End the enemy's turn after attacking
+            EndTurn();
+        }
+        else if (distanceToCharacter <= 5)
+        {
+            // Move towards the player character if they are within 5 blocks
+            transform.position += (transform.position - playerCharacter.transform.position).normalized * moveSpeed * Time.deltaTime;
+            Debug.Log("Enemy moving towards player character!");
+        }
+        else
+        {
+            // Move right 5 blocks in the first turn, and left 5 blocks in the next turn
+            if (hasMovedThisTurn)
+            {
+                transform.position += Vector3.left * 5;
+                Debug.Log("Enemy moving left!");
+            }
+            else
+            {
+                transform.position += Vector3.right * 5;
+                Debug.Log("Enemy moving right!");
+            }
+        }
+
+        // Mark this turn as having been moved
+        hasMovedThisTurn = true;
+    }
+
+    public void StartTurn()
+    {
+        hasMovedThisTurn = false;
+        PerformAction();
+    }
+
+
     // displaying enemy info if this enemy is clicked
     // click again to hide info
-    void OnMouseDown() 
-    {
-        HUD.ToggleEnemy(gameObject);
-    }
 
     private void start()
     {

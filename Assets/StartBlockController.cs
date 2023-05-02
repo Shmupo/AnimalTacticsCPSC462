@@ -14,6 +14,7 @@ public class StartBlockController : MonoBehaviour
     public GameObject childBlock = null;
     public GameObject playerCharacter;
     private PlayerController playerScript = null;
+    public EnemyController enemyScript = null;
 
 
     // The name of the block is used to identify it : "MoveRightBlock" will move the character right
@@ -38,7 +39,7 @@ public class StartBlockController : MonoBehaviour
         ReadInstructions();
         ExecuteBlockCode();
         // Enemy turn starts here
-        //...
+        enemyScript.StartTurn();
     }
 
     // iterate through actionStack
