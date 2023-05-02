@@ -32,10 +32,13 @@ public class StartBlockController : MonoBehaviour
         }
     }
 
+    // This is essentially the "start round" button
     public void OnMouseUp()
     {
         ReadInstructions();
         ExecuteBlockCode();
+        // Enemy turn starts here
+        //...
     }
 
     // iterate through actionStack
@@ -57,11 +60,5 @@ public class StartBlockController : MonoBehaviour
         {
             Debug.LogError("No character found.");
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
