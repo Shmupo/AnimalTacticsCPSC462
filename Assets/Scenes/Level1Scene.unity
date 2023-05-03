@@ -1682,7 +1682,9 @@ MonoBehaviour:
   attackRange: 1
   health: 1
   attack: 3
-  playerCharacter: {fileID: 457956307}
+  AP: 2
+  playerScript: {fileID: 0}
+  playerCharacter: {fileID: 511468228}
   HUD: {fileID: 1293426622}
 --- !u!212 &1249828906
 SpriteRenderer:
@@ -3260,6 +3262,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   childBlock: {fileID: 0}
   playerCharacter: {fileID: 457956307}
+  enemyScript: {fileID: 1249828905}
 --- !u!61 &1610469747
 BoxCollider2D:
   m_ObjectHideFlags: 0

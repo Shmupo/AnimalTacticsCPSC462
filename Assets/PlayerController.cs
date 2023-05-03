@@ -61,28 +61,28 @@ public class PlayerController : MonoBehaviour
     {
         if (name == "Up")
         {
-            if (CheckMoveTile())
+            if (CheckMoveTile(name))
             {
                 ChangeMovePoint(name);
             }
         }
         else if (name == "Down")
         {
-            if (CheckMoveTile())
+            if (CheckMoveTile(name))
             {
                 ChangeMovePoint(name);
             }
         }
         else if (name == "Left")
         {
-            if (CheckMoveTile())
+            if (CheckMoveTile(name))
             {
                 ChangeMovePoint(name);
             }
         }
         else if (name == "Right")
         {
-            if (CheckMoveTile())
+            if (CheckMoveTile(name))
             {
                 ChangeMovePoint(name);
             }
@@ -143,10 +143,29 @@ public class PlayerController : MonoBehaviour
     }
 
     // check if tile to move to is passable, false if not
-    private bool CheckMoveTile()
+    private bool CheckMoveTile(string direction)
     {
-        Vector3Int movePointTile = tilemap.WorldToCell(movePoint.position);
-        TileBase tile = tilemap.GetTile(movePointTile);
+        Vector3 newPos = movePoint.position;
+
+        if (direction == "Up")
+        {
+            newPos += new Vector3(0, 1, 0);
+        }
+        else if (direction == "Down")
+        {
+            newPos += new Vector3(0, -1, 0);
+        }
+        else if (direction == "Left")
+        {
+            newPos += new Vector3(-1, 0, 0);
+        }
+        else if (direction == "Right")
+        {
+            newPos += new Vector3(1, 0, 0);
+        }
+        else { newPos = Vector3.zero;  }
+
+        TileBase tile = tilemap.GetTile(tilemap.WorldToCell(newPos));
 
         if (tile is CustomTile customTile)
         {
