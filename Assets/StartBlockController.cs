@@ -13,7 +13,7 @@ public class StartBlockController : MonoBehaviour
     // this is assigned in the DragBlockController script
     public GameObject childBlock = null;
     public GameObject playerCharacter;
-    private PlayerController playerScript = null;
+    public PlayerController playerScript = null;
     public EnemyController enemyScript = null;
 
 
@@ -48,16 +48,5 @@ public class StartBlockController : MonoBehaviour
         }
         // Enemy turn starts here
         enemyScript.StartTurn();
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        playerScript = playerCharacter.transform.Find("Character").gameObject.GetComponent<PlayerController>();
-
-        if (playerScript == null ) 
-        {
-            Debug.LogError("No character found.");
-        }
     }
 }
