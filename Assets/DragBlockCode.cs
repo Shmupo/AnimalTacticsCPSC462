@@ -21,13 +21,14 @@ public class DragBlockCode : MonoBehaviour
     // what the block will do
     public string blockAction;
 
-    private float snapDistanceX = 0.5f;
-    private float snapDistanceY = 1f;
+    private const float snapDistanceX = 0.5f;
+    private const float snapDistanceY = 1f;
     // How much to move down the block when snapping
     private Vector3 blockAttatchOffset = new Vector3 (0f, -1.25f, 0f);
     // For attatching below
     private Vector2 extendY = new Vector2 (0f, 1f);
 
+    // moves the block as the user holds down the mouse
     public void OnMouseDown()
     {
         isDragging = true;
@@ -39,6 +40,7 @@ public class DragBlockCode : MonoBehaviour
         }
     }
 
+    // adjusts the positions of the block when the player lets go, checking if this should snap to another block
     public void OnMouseUp()
     {
         isDragging = false;
@@ -57,20 +59,32 @@ public class DragBlockCode : MonoBehaviour
         }
     }
 
+    // Update the position of all child blocks
+    private void UpdateChildPositions(Vector2 mousePos)
+    {
+        if (childBlock != null)
+        {
+            childBlock.transform.Translate(mousePos);
+
+            // Update the position of all child blocks recursively
+            var childDragBlockCode = childBlock.GetComponent<DragBlockCode>();
+            if (childDragBlockCode != null)
+            {
+                childDragBlockCode.UpdateChildPositions(mousePos);
+            }
+        }
+    }
+
+    // defines how the player uses the mouse to move the block around
     // also drags child blocks
     public void Drag()
     {
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
         transform.Translate(mousePos);
 
-        if(childBlock != null)
-        {
-            childBlock.transform.Translate(mousePos);
-        }
+        UpdateChildPositions(mousePos);
     }
 
-    // snap this block to the bottom of another
-    // return true if snapped
     private bool SnapToBottom(GameObject block)
     {
         // check collision with another block
@@ -83,12 +97,22 @@ public class DragBlockCode : MonoBehaviour
             if (block.name == "MainStartBlock")
             {
                 transform.position += new Vector3(0f, 0.1f, 0f);
-
                 if (childBlock != null)
                 {
                     childBlock.transform.position = transform.position - new Vector3(0f, 1.25f, .0f);
                 }
             }
+
+            // Snap child blocks if there are any
+            if (childBlock != null)
+            {
+                var childDragBlockCode = childBlock.GetComponent<DragBlockCode>();
+                if (childDragBlockCode != null)
+                {
+                    childDragBlockCode.SnapToBottom(gameObject);
+                }
+            }
+
             return true;
         }
         else
@@ -97,7 +121,7 @@ public class DragBlockCode : MonoBehaviour
         }
     }
 
-    // Links both child(this object) and parent
+    // Links both child(this object) and parent to be dragged together and communicate with eachother
     private void AssignParent(GameObject parent)
     {
         if (parent == null) {
@@ -144,7 +168,7 @@ public class DragBlockCode : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
+    // Update is called once per frame, updates the drag position
     void Update()
     {
         if (isDragging)

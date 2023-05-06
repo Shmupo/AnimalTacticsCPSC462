@@ -33,23 +33,21 @@ public class StartBlockController : MonoBehaviour
         }
     }
 
-    // This is essentially the "start round" button
+    // pressing this button ends the player turn and exectutes it, then executes the enemy turn.
     public void OnMouseUp()
     {
         ReadInstructions();
-        ExecuteBlockCode();
-        // Enemy turn starts here
-        enemyScript.StartTurn();
+        StartCoroutine(ExecuteBlockCodeAndStartEnemyTurn());
     }
 
-    // iterate through actionStack
-    // use DoAction in PlayerControllerScript
-    private void ExecuteBlockCode()
+    private IEnumerator ExecuteBlockCodeAndStartEnemyTurn()
     {
         if (actionStack != null)
         {
-            StartCoroutine(playerScript.ActivatePlayer(actionStack));
+            yield return StartCoroutine(playerScript.ActivatePlayer(actionStack));
         }
+        // Enemy turn starts here
+        enemyScript.StartTurn();
     }
 
     // Start is called before the first frame update

@@ -35,11 +35,45 @@ public class EnemyController : MonoBehaviour
                 Debug.Log("Enemy attacked player character!");
             }
         }
-        else
-        {
-            // Move towards the player character if they are within 5 blocks
-            transform.position += (transform.position - playerCharacter.transform.position).normalized * moveSpeed * Time.deltaTime;
-            Debug.Log("Enemy moving towards player character!");
+        else{
+            // Move towards the player character one block each time, it can only move horizontal or vertical and keeps 1 block distance away from players
+            // so find x and y distance from the player
+            float xDistance = Mathf.Abs(transform.position.x - playerCharacter.transform.position.x);
+            float yDistance = Mathf.Abs(transform.position.y - playerCharacter.transform.position.y);
+            // if x distance is greater than y distance, move horizontally
+            if (xDistance > yDistance)
+            {
+                // if the enemy is to the left of the player, move right
+                if (transform.position.x < playerCharacter.transform.position.x)
+                {
+                    transform.position += new Vector3(1, 0, 0);
+                    Debug.Log("Enemy is moving right");
+                }
+                // if the enemy is to the right of the player, move left
+                else if (transform.position.x > playerCharacter.transform.position.x)
+                {
+                    transform.position += new Vector3(-1, 0, 0);
+                    Debug.Log("Enemy is moving left");
+                }
+            }
+            // if y distance is greater than x distance, move vertically
+            else if (yDistance > xDistance)
+            {
+                // if the enemy is below the player, move up
+                if (transform.position.y < playerCharacter.transform.position.y)
+                {
+                    transform.position += new Vector3(0, 1, 0);
+                    Debug.Log("Enemy is moving up");
+                }
+                // if the enemy is above the player, move down
+                else if (transform.position.y > playerCharacter.transform.position.y)
+                {
+                    transform.position += new Vector3(0, -1, 0);
+                    Debug.Log("Enemy is moving down");
+                }
+            }
+            
+
         }
     }
 
